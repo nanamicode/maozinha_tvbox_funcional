@@ -1,0 +1,30 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.tridi.maozinha'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.tridi.maozinha"
+        minSdk 26
+        targetSdk 28
+        versionCode 1
+        versionName "0.1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug { debuggable true }
+    }
+
+    packaging {
+        jniLibs { useLegacyPackaging = true }
+    }
+}
+
+dependencies {
+    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+}
