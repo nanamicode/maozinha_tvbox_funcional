@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+import * as THREE from '/vendor/three.module.js';
 
 const canvas=document.querySelector('#gl');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
