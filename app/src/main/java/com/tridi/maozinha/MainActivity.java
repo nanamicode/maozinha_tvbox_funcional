@@ -52,7 +52,7 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
         cameraThread=new HandlerThread("camera");
         cameraThread.start();
         cameraHandler=new Handler(cameraThread.getLooper());
-        inferenceThread=new HandlerThread("hand-ai",Process.THREAD_PRIORITY_DISPLAY);
+        inferenceThread=new HandlerThread("hand-ai",android.os.Process.THREAD_PRIORITY_DISPLAY);
         inferenceThread.start();
         inferenceHandler=new Handler(inferenceThread.getLooper());
 
