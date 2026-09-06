@@ -1,1 +1,37 @@
-name: Build Windows EXE\n\non:\n  push:\n    branches: [main]\n  workflow_dispatch:\n\njobs:\n  build-windows:\n    runs-on: windows-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: '3.10'\n      - name: Install dependencies\n        run: pip install -r windows/requirements.txt\n      - name: Download models and local Three.js\n        shell: bash\n        run: |\n          mkdir -p models web/vendor\n          curl -L --fail --retry 3 -o models/hand_detection.tflite https://raw.githubusercontent.com/hugocornellier/hand_detection/main/assets/models/hand_detection.tflite\n          curl -L --fail --retry 3 -o models/hand_landmark_full.tflite https://raw.githubusercontent.com/hugocornellier/hand_detection/main/assets/models/hand_landmark_full.tflite\n          curl -L --fail --retry 3 -o web/vendor/three.module.js https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js\n      - name: Build EXE\n        shell: pwsh\n        run: >-\n          pyinstaller --noconfirm --clean --onefile --name MaozinhaDigitalTwin\n          --add-data "web;web"\n          --add-data "models;models"\n          --add-data "shared;shared"\n          --collect-all tensorflow\n          windows/maozinha_windows.py\n      - uses: actions/upload-artifact@v4\n        with:\n          name: maozinha-windows-digital-twin\n          path: dist/MaozinhaDigitalTwin.exe\n
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r windows/requirements.txt
+      - name: Download models and local Three.js
+        shell: bash
+        run: |
+          mkdir -p models web/vendor
+          curl -L --fail --retry 3 -o models/hand_detection.tflite https://raw.githubusercontent.com/hugocornellier/hand_detection/main/assets/models/hand_detection.tflite
+          curl -L --fail --retry 3 -o models/hand_landmark_full.tflite https://raw.githubusercontent.com/hugocornellier/hand_detection/main/assets/models/hand_landmark_full.tflite
+          curl -L --fail --retry 3 -o web/vendor/three.module.js https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js
+      - name: Build EXE
+        shell: pwsh
+        run: >-
+          pyinstaller --noconfirm --clean --onefile --name MaozinhaDigitalTwin
+          --add-data "web;web"
+          --add-data "models;models"
+          --add-data "shared;shared"
+          --collect-all tensorflow
+          windows/maozinha_windows.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maozinha-windows-digital-twin
+          path: dist/MaozinhaDigitalTwin.exe
