@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class MainActivity extends Activity implements TextureView.SurfaceTextureListener {
+public final class MainActivity extends Activity implements TextureView.SurfaceTextureListener, LocalTwinServer.Control {
     private static final int REQ_CAMERA=7;
     private static final int W=640,H=480;
 
@@ -27,6 +27,8 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
     private CameraCaptureSession session;
     private ImageReader reader;
     private HandTracker tracker;
+    private LocalTwinServer twinServer;
+    private volatile boolean aiEnabled=true;
     private volatile boolean trackerReady=false;
     private final AtomicBoolean inferenceBusy=new AtomicBoolean(false);
     private int[] rgbReuse;
@@ -48,6 +50,13 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
         root.addView(preview,new FrameLayout.LayoutParams(-1,-1));
         root.addView(overlay,new FrameLayout.LayoutParams(-1,-1));
         setContentView(root);
+
+        try {
+            twinServer=new LocalTwinServer(this,this);
+            twinServer.start(5000,false);
+        } catch(Exception e) {
+            overlay.setResult(null,0,0,"WEB ERROR: "+shortMsg(e));
+        }
 
         cameraThread=new HandlerThread("camera");
         cameraThread.start();
@@ -149,7 +158,7 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
         Image image=ir.acquireLatestImage();
         if(image==null) return;
         countCameraFrame();
-        if(!trackerReady || !inferenceBusy.compareAndSet(false,true)) {
+        if(!trackerReady || !aiEnabled || !inferenceBusy.compareAndSet(false,true)) {
             image.close();
             return;
         }
@@ -169,6 +178,7 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
             }
             final HandResult r=result;
             final String s=status;
+            if(twinServer!=null) twinServer.publish(r,aiFps,s);
             runOnUiThread(() -> overlay.setResult(r,cameraFps,aiFps,s));
         });
     }
@@ -200,6 +210,7 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
         if(inferenceHandler!=null) inferenceHandler.post(() -> { if(tracker!=null) tracker.close(); });
         if(cameraThread!=null) cameraThread.quitSafely();
         if(inferenceThread!=null) inferenceThread.quitSafely();
+        if(twinServer!=null) twinServer.stop();
         super.onDestroy();
     }
 
@@ -214,6 +225,9 @@ public final class MainActivity extends Activity implements TextureView.SurfaceT
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
+
+    @Override public void setAiEnabled(boolean enabled) { aiEnabled=enabled; }
+    @Override public boolean isAiEnabled() { return aiEnabled; }
 
     private static String shortMsg(Throwable t) {
         String s=t.getMessage();
