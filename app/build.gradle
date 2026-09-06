@@ -27,5 +27,6 @@ android {
 }
 
 dependencies {
-    implementation 'org.tensorflow:tensorflow-lite:2.14.0'\n    implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
+    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+    implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
 }
