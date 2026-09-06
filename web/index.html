@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Maozinha Digital Twin</title>
+<link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+<div id="app">
+  <header><div><b>MAOZINHA</b><span> DIGITAL TWIN</span></div><div id="badge">DESCONECTADO</div></header>
+  <main>
+    <section id="stage"><canvas id="gl"></canvas></section>
+    <aside>
+      <h1>Mão robótica 3D</h1>
+      <p class="muted">Gêmeo visual controlado pelos mesmos 21 landmarks usados no APK.</p>
+      <div class="buttons"><button id="start">ATIVAR IA</button><button id="stop" class="secondary">PARAR</button></div>
+      <div class="grid">
+        <div><small>BACKEND</small><strong id="backend">-</strong></div>
+        <div><small>PERFIL</small><strong id="profile">-</strong></div>
+        <div><small>IA FPS</small><strong id="fps">0.0</strong></div>
+        <div><small>LATÊNCIA</small><strong id="latency">0 ms</strong></div>
+        <div><small>ESTADO</small><strong id="state">PARADO</strong></div>
+        <div><small>GESTO</small><strong id="gesture">-</strong></div>
+      </div>
+      <label><span>Espelhar mão</span><input id="mirror" type="checkbox" checked></label>
+      <label><span>Profundidade Z</span><input id="depth" type="range" min="0" max="3" step=".05" value="1.2"></label>
+      <p class="note">Windows é propositalmente limitado ao perfil BTV B11. Qualquer recurso novo só entra aqui se também puder existir no APK.</p>
+    </aside>
+  </main>
+</div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
