@@ -1,0 +1,18 @@
+{
+  "profileVersion": "b11-parity-v1",
+  "cameraWidth": 640,
+  "cameraHeight": 480,
+  "maxHands": 1,
+  "threads": 2,
+  "palmInput": 192,
+  "landmarkInput": 224,
+  "palmScoreThreshold": 0.55,
+  "landmarkScoreThreshold": 0.45,
+  "palmRoiScale": 2.6,
+  "trackingRoiScale": 2.15,
+  "trackingShift": 0.10,
+  "redetectEveryFrames": 30,
+  "modelPrecision": "FP32",
+  "palmModel": "hand_detection",
+  "landmarkModel": "hand_landmark_full"
+}
