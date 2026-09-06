@@ -1,0 +1,5 @@
+tensorflow==2.14.0
+opencv-python-headless==4.10.0.84
+aiohttp==3.10.11
+numpy==1.26.4
+pyinstaller==6.11.1
