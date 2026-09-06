@@ -10,6 +10,7 @@ android {
         targetSdk 28
         versionCode 1
         versionName "0.1.0"
+        ndk { abiFilters "armeabi-v7a" }
     }
 
     buildTypes {
